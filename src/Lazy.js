@@ -2,8 +2,7 @@ export class Lazy {
 
     constructor(){
 
-        this.items = []; 
-        //receives 1 or more arguments, fn and also arguments to provide when called
+        this.functions = []; 
 
     }
 
@@ -13,8 +12,7 @@ export class Lazy {
 
     add(...args){
         //add to the start of the array so we can iterate forwards
-        this.items.unshift(args);
-        console.log(this.items);
+        this.functions.push(args);
         return this;
     }
 
@@ -22,25 +20,34 @@ export class Lazy {
     // Returns an array containing the result of
     // applying the chain of functions to the array target.
 
-    evaluate(...args){
+    evaluate(){
         const results = [];
-
-        //iterate through each target value
         let targets = arguments[0];
+        let currentResult;
 
+        // iterate through each target value
         targets.forEach( target => {
 
-            //iterate through each function already passed in order they were passed
-            this.items.forEach( functionItem => {
+            currentResult = target;
+            let passedFunctions = this.functions;
+            passedFunctions.forEach( functionItem => {
 
-                //iterate through each functionItem to see if there are any additional properties
-                const functionToCall = functionItem[0];
-                debugger;
-                let result = functionToCall.apply(target);
-                results.push(result);
+                // get the first item from the functionItem array
+                // leave other items remaining if there are any
+
+                const functionToCall = functionItem.splice(0, 1);
+
+                // need to make an array from additional arguments passes
+                let paramsToPass = [currentResult, ...functionItem];
+                currentResult = functionToCall[0].apply(null, paramsToPass);
+
+                /* debugger;*/
             });
 
-        });
+            results.push(currentResult);
+        })
+
         return results;
+
     }
 }

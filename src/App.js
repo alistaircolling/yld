@@ -8,11 +8,9 @@ class App extends Component {
         super(props, context);
 
         const computation = new Lazy();
-        /* computation.add(function plus(a, b) { return a + b; }, 1)*/
-        console.log("results:" + computation.add(function plus(a) { return a + 1; })
-                   .add(function minus(a) { return a - 4; })
-                   .evaluate([1, 2, 3]));
-
+        console.log("result:"+ computation.add(function plusA(a, b) { return a + b; }, 1)
+                   .add(function plus(a) { return a + 1; })
+        .evaluate([1, 2]));
     }
 
     render() {
